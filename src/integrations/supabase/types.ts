@@ -14,7 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blog_posts: {
+        Row: {
+          author: string
+          category: string
+          content: string
+          created_at: string
+          excerpt: string
+          featured_image: string
+          id: string
+          meta_description: string
+          read_time: string
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string
+          category?: string
+          content: string
+          created_at?: string
+          excerpt?: string
+          featured_image?: string
+          id?: string
+          meta_description?: string
+          read_time?: string
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          category?: string
+          content?: string
+          created_at?: string
+          excerpt?: string
+          featured_image?: string
+          id?: string
+          meta_description?: string
+          read_time?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_submissions: {
+        Row: {
+          business_type: string | null
+          city: string | null
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+        }
+        Insert: {
+          business_type?: string | null
+          city?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+        }
+        Update: {
+          business_type?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      email_captures: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          source: string
+          trade: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          source?: string
+          trade?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          source?: string
+          trade?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
