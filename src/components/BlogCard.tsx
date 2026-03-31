@@ -21,11 +21,11 @@ export default function BlogCard({ post }: { post: BlogPost }) {
         <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Calendar className="h-3 w-3" />
-            {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            {new Date(post.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
           </span>
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
-            {post.readTime}
+            {post.read_time}
           </span>
         </div>
       </div>
