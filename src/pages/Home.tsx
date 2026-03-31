@@ -4,7 +4,8 @@ import { Search, Phone, Trophy } from "lucide-react";
 import BlogCard from "@/components/BlogCard";
 import EmailCapture from "@/components/EmailCapture";
 import SEOHead from "@/components/SEOHead";
-import { getPosts } from "@/lib/blog-data";
+import { getPosts, type BlogPost } from "@/lib/blog-data";
+import { useQuery } from "@tanstack/react-query";
 
 const features = [
   {
@@ -25,7 +26,12 @@ const features = [
 ];
 
 export default function Home() {
-  const recentPosts = getPosts().slice(0, 3);
+  const { data: posts = [] } = useQuery<BlogPost[]>({
+    queryKey: ["posts"],
+    queryFn: getPosts,
+  });
+
+  const recentPosts = posts.slice(0, 3);
 
   return (
     <>
@@ -72,21 +78,23 @@ export default function Home() {
       </section>
 
       {/* Recent Posts */}
-      <section className="bg-secondary/50">
-        <div className="container py-16 md:py-20">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Latest from the Blog</h2>
-            <Link to="/blog" className="text-sm font-medium text-accent hover:underline">
-              View all →
-            </Link>
+      {recentPosts.length > 0 && (
+        <section className="bg-secondary/50">
+          <div className="container py-16 md:py-20">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold">Latest from the Blog</h2>
+              <Link to="/blog" className="text-sm font-medium text-accent hover:underline">
+                View all →
+              </Link>
+            </div>
+            <div className="grid gap-6 md:grid-cols-3">
+              {recentPosts.map((post) => (
+                <BlogCard key={post.id} post={post} />
+              ))}
+            </div>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {recentPosts.map((post) => (
-              <BlogCard key={post.id} post={post} />
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="container py-16 md:py-20 max-w-2xl mx-auto">

@@ -1,10 +1,14 @@
 import { useState } from "react";
 import BlogCard from "@/components/BlogCard";
 import SEOHead from "@/components/SEOHead";
-import { getPosts, getCategories } from "@/lib/blog-data";
+import { getPosts, getCategories, type BlogPost } from "@/lib/blog-data";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Blog() {
-  const posts = getPosts();
+  const { data: posts = [] } = useQuery<BlogPost[]>({
+    queryKey: ["posts"],
+    queryFn: getPosts,
+  });
   const categories = getCategories();
   const [active, setActive] = useState("All");
 
@@ -22,7 +26,6 @@ export default function Blog() {
         <h1 className="text-3xl md:text-4xl font-extrabold">Blog</h1>
         <p className="mt-2 text-muted-foreground">Actionable SEO tips for contractors who want more leads.</p>
 
-        {/* Category filter */}
         <div className="mt-6 flex flex-wrap gap-2">
           {["All", ...categories].map((cat) => (
             <button
@@ -39,7 +42,6 @@ export default function Blog() {
           ))}
         </div>
 
-        {/* Grid */}
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((post) => (
             <BlogCard key={post.id} post={post} />

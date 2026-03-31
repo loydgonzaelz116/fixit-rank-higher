@@ -3,16 +3,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SEOHead from "@/components/SEOHead";
+import { submitContact } from "@/lib/blog-data";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", business: "", city: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Webhook integration point
-    console.log("Contact form submitted:", form);
-    setSubmitted(true);
+    setLoading(true);
+    const ok = await submitContact({
+      name: form.name,
+      email: form.email,
+      business_type: form.business || undefined,
+      city: form.city || undefined,
+      message: form.message || undefined,
+    });
+    setLoading(false);
+    if (ok) setSubmitted(true);
   };
 
   return (
@@ -43,40 +52,16 @@ export default function Contact() {
         ) : (
           <form onSubmit={handleSubmit} className="mt-10 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input
-                placeholder="Your name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                required
-              />
-              <Input
-                type="email"
-                placeholder="Email address"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-              />
+              <Input placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+              <Input type="email" placeholder="Email address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input
-                placeholder="Business type (e.g. Plumbing)"
-                value={form.business}
-                onChange={(e) => setForm({ ...form, business: e.target.value })}
-              />
-              <Input
-                placeholder="City"
-                value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
-              />
+              <Input placeholder="Business type (e.g. Plumbing)" value={form.business} onChange={(e) => setForm({ ...form, business: e.target.value })} />
+              <Input placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
             </div>
-            <Textarea
-              placeholder="Tell us about your business and goals (optional)"
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              rows={4}
-            />
-            <Button type="submit" variant="cta" size="lg" className="w-full sm:w-auto">
-              Send Message
+            <Textarea placeholder="Tell us about your business and goals (optional)" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} />
+            <Button type="submit" variant="cta" size="lg" className="w-full sm:w-auto" disabled={loading}>
+              {loading ? "Sending..." : "Send Message"}
             </Button>
           </form>
         )}
