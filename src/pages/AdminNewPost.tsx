@@ -3,12 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SEOHead from "@/components/SEOHead";
-import { addPost, getCategories } from "@/lib/blog-data";
+import { getCategories } from "@/lib/blog-data";
 import { useQueryClient } from "@tanstack/react-query";
+
+const FUNCTION_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/admin-create-post`;
 
 export default function AdminNewPost() {
   const categories = getCategories();
   const queryClient = useQueryClient();
+  const [token, setToken] = useState(() => sessionStorage.getItem("admin_token") || "");
+  const [authenticated, setAuthenticated] = useState(false);
   const [form, setForm] = useState({
     title: "",
     slug: "",
@@ -21,6 +25,14 @@ export default function AdminNewPost() {
   const [result, setResult] = useState<{ success: boolean; slug?: string; error?: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (token.trim()) {
+      sessionStorage.setItem("admin_token", token.trim());
+      setAuthenticated(true);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title || !form.slug || !form.content) {
@@ -29,28 +41,63 @@ export default function AdminNewPost() {
     }
 
     setLoading(true);
-    const res = await addPost({
-      title: form.title,
-      slug: form.slug,
-      content: form.content,
-      category: form.category,
-      featured_image: form.featuredImage,
-      meta_description: form.metaDescription || form.excerpt,
-      excerpt: form.excerpt || form.title,
-      author: "FixItNearMe Team",
-      read_time: `${Math.max(2, Math.ceil(form.content.split(/\s+/).length / 200))} min`,
-    });
-    setLoading(false);
-    setResult(res);
+    try {
+      const res = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: form.title,
+          slug: form.slug,
+          content: form.content,
+          category: form.category,
+          featured_image: form.featuredImage,
+          meta_description: form.metaDescription || form.excerpt,
+          excerpt: form.excerpt || form.title,
+        }),
+      });
 
-    if (res.success) {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      setForm({ title: "", slug: "", content: "", category: categories[0], featuredImage: "", metaDescription: "", excerpt: "" });
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          setAuthenticated(false);
+          sessionStorage.removeItem("admin_token");
+        }
+        setResult({ success: false, error: data.error || "Request failed" });
+      } else {
+        setResult(data);
+        if (data.success) {
+          queryClient.invalidateQueries({ queryKey: ["posts"] });
+          setForm({ title: "", slug: "", content: "", category: categories[0], featuredImage: "", metaDescription: "", excerpt: "" });
+        }
+      }
+    } catch {
+      setResult({ success: false, error: "Network error" });
     }
+    setLoading(false);
   };
 
   const autoSlug = (title: string) =>
     title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim();
+
+  if (!authenticated) {
+    return (
+      <>
+        <SEOHead title="Admin Login" description="Admin authentication" path="/admin/new-post" />
+        <section className="container py-20 max-w-md mx-auto text-center">
+          <h1 className="text-2xl font-extrabold mb-2">Admin Access</h1>
+          <p className="text-sm text-muted-foreground mb-6">Enter your bearer token to continue.</p>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <Input type="password" placeholder="Bearer token" value={token} onChange={(e) => setToken(e.target.value)} required />
+            <Button type="submit" variant="cta" className="w-full">Authenticate</Button>
+          </form>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>
