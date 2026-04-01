@@ -2,6 +2,7 @@ import SEOHead from "@/components/SEOHead";
 import BeehiivEmbed from "@/components/BeehiivEmbed";
 import { CheckCircle2 } from "lucide-react";
 
+
 const checklistItems = [
   "Google Business Profile audit",
   "On-page SEO quick wins",
