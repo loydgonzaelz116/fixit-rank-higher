@@ -49,12 +49,7 @@ export default function FreeChecklist() {
           </div>
 
           <div className="md:sticky md:top-24">
-            <EmailCapture
-              heading="Get Instant Access"
-              subheading="Enter your info and we'll send the checklist straight to your inbox."
-              buttonText="Download the Checklist"
-              showTrade
-            />
+            <BeehiivEmbed />
           </div>
         </div>
       </section>
