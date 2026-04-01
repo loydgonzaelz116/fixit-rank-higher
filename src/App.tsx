@@ -11,6 +11,7 @@ import FreeChecklist from "@/pages/FreeChecklist";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AdminNewPost from "@/pages/AdminNewPost";
+import AdminBlogEditor from "@/pages/AdminBlogEditor";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin/new-post" element={<AdminNewPost />} />
+            <Route path="/admin/blog-editor" element={<AdminBlogEditor />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
