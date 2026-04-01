@@ -12,7 +12,7 @@ export default function BeehiivEmbed() {
   }, []);
 
   return (
-    <div className="w-full overflow-hidden" style={{ maxHeight: "120px" }}>
+    <div className="w-full overflow-hidden" style={{ height: "100px" }}>
       <iframe
         src="https://subscribe-forms.beehiiv.com/ba049f1b-7691-4f47-a34e-78392412d5b1"
         className="beehiiv-embed"
