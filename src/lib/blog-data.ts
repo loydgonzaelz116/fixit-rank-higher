@@ -82,6 +82,16 @@ export async function captureEmail(data: {
     console.error("Error capturing email:", error);
     return false;
   }
+
+  // Also subscribe to Beehiiv
+  try {
+    await supabase.functions.invoke("subscribe-beehiiv", {
+      body: { email: data.email },
+    });
+  } catch (e) {
+    console.error("Beehiiv subscription error:", e);
+  }
+
   return true;
 }
 
