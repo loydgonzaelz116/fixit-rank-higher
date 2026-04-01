@@ -1,5 +1,5 @@
 import SEOHead from "@/components/SEOHead";
-import EmailCapture from "@/components/EmailCapture";
+import BeehiivEmbed from "@/components/BeehiivEmbed";
 import { CheckCircle2 } from "lucide-react";
 
 const checklistItems = [
