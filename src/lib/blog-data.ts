@@ -41,30 +41,6 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   return data;
 }
 
-export async function addPost(
-  post: Omit<BlogPost, "id" | "created_at">
-): Promise<{ success: boolean; slug?: string; error?: string }> {
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .insert({
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt,
-      content: post.content,
-      category: post.category,
-      featured_image: post.featured_image,
-      meta_description: post.meta_description,
-      author: post.author,
-      read_time: post.read_time,
-    })
-    .select("slug")
-    .single();
-
-  if (error) {
-    return { success: false, error: error.message };
-  }
-  return { success: true, slug: data.slug };
-}
 
 export async function captureEmail(data: {
   first_name: string;
