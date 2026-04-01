@@ -23,7 +23,7 @@ export default function BeehiivEmbed() {
           width: "100%",
           height: "315px",
           margin: 0,
-          marginTop: "-195px",
+          marginTop: "-175px",
           borderRadius: 0,
           backgroundColor: "transparent",
           boxShadow: "0 0 #0000",
