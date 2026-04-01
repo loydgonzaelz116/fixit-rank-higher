@@ -49,8 +49,16 @@ export default function FreeChecklist() {
             </p>
           </div>
 
-          <div className="md:sticky md:top-24">
-            <BeehiivEmbed />
+          <div className="md:sticky md:top-24 rounded-xl bg-primary p-6 md:p-8 text-center">
+            <h3 className="text-2xl md:text-3xl font-extrabold text-primary-foreground">
+              Get the Free Checklist
+            </h3>
+            <p className="mt-2 text-sm text-primary-foreground/70">
+              Enter your email and we'll send it straight to your inbox.
+            </p>
+            <div className="mt-4 flex justify-center">
+              <BeehiivEmbed />
+            </div>
           </div>
         </div>
       </section>
