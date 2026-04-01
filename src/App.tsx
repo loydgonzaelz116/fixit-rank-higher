@@ -11,6 +11,7 @@ import FreeChecklist from "@/pages/FreeChecklist";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AdminNewPost from "@/pages/AdminNewPost";
+import AdminBlogEditor from "@/pages/AdminBlogEditor";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
