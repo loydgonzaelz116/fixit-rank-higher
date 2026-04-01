@@ -31,6 +31,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin/new-post" element={<AdminNewPost />} />
+            <Route path="/admin/blog-editor" element={<AdminBlogEditor />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
