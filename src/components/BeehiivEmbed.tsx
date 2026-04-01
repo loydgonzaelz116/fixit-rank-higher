@@ -12,7 +12,7 @@ export default function BeehiivEmbed() {
   }, []);
 
   return (
-    <div className="w-full overflow-hidden" style={{ maxHeight: "180px" }}>
+    <div className="w-full overflow-hidden" style={{ height: "80px" }}>
       <iframe
         src="https://subscribe-forms.beehiiv.com/ba049f1b-7691-4f47-a34e-78392412d5b1"
         className="beehiiv-embed"
@@ -23,7 +23,7 @@ export default function BeehiivEmbed() {
           width: "100%",
           height: "315px",
           margin: 0,
-          marginTop: "-130px",
+          marginTop: "-210px",
           borderRadius: 0,
           backgroundColor: "transparent",
           boxShadow: "0 0 #0000",
