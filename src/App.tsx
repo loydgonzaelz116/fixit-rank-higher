@@ -12,6 +12,7 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AdminNewPost from "@/pages/AdminNewPost";
 import AdminBlogEditor from "@/pages/AdminBlogEditor";
+import ComingSoon from "@/pages/ComingSoon";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
