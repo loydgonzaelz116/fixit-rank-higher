@@ -86,6 +86,15 @@ export default function BlogPostPage() {
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
+        <div className="mt-8 rounded-lg bg-secondary p-5 border border-border">
+          <p className="text-sm text-primary">
+            Catching a game this weekend? Find the best sports bars and watch guides in Spokane at{" "}
+            <a href="https://eventdayguide.com" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline font-medium">
+              EventDayGuide.com
+            </a>.
+          </p>
+        </div>
+
         <div className="mt-12 rounded-lg bg-secondary p-6 flex gap-4 items-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-lg shrink-0">
             F
