@@ -96,6 +96,17 @@ export default function Home() {
         </section>
       )}
 
+      {/* Coming Soon Banner */}
+      <section className="bg-accent/10 border-y border-accent/20">
+        <div className="container py-8 md:py-10 text-center">
+          <p className="text-lg font-semibold">Not in your city yet?</p>
+          <p className="mt-1 text-sm text-muted-foreground">Get notified when we launch near you.</p>
+          <Button variant="cta" className="mt-4" asChild>
+            <Link to="/coming-soon">Join the Waitlist</Link>
+          </Button>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="container py-16 md:py-20 max-w-2xl mx-auto">
         <EmailCapture

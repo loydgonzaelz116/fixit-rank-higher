@@ -12,6 +12,7 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AdminNewPost from "@/pages/AdminNewPost";
 import AdminBlogEditor from "@/pages/AdminBlogEditor";
+import ComingSoon from "@/pages/ComingSoon";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin/new-post" element={<AdminNewPost />} />
             <Route path="/admin/blog-editor" element={<AdminBlogEditor />} />
+            <Route path="/coming-soon" element={<ComingSoon />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
