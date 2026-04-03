@@ -18,42 +18,51 @@ export type Database = {
         Row: {
           author: string
           category: string
+          city: string | null
           content: string
           created_at: string
           excerpt: string
           featured_image: string
           id: string
           meta_description: string
+          meta_title: string | null
           read_time: string
           slug: string
+          status: string
           title: string
           updated_at: string
         }
         Insert: {
           author?: string
           category?: string
+          city?: string | null
           content: string
           created_at?: string
           excerpt?: string
           featured_image?: string
           id?: string
           meta_description?: string
+          meta_title?: string | null
           read_time?: string
           slug: string
+          status?: string
           title: string
           updated_at?: string
         }
         Update: {
           author?: string
           category?: string
+          city?: string | null
           content?: string
           created_at?: string
           excerpt?: string
           featured_image?: string
           id?: string
           meta_description?: string
+          meta_title?: string | null
           read_time?: string
           slug?: string
+          status?: string
           title?: string
           updated_at?: string
         }
