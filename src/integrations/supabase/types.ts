@@ -89,6 +89,33 @@ export type Database = {
         }
         Relationships: []
       }
+      contractor_waitlist: {
+        Row: {
+          city: string
+          created_at: string
+          email: string
+          id: string
+          name: string
+          trade: string | null
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          trade?: string | null
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          trade?: string | null
+        }
+        Relationships: []
+      }
       email_captures: {
         Row: {
           created_at: string
