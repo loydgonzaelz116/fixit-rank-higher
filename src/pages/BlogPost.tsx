@@ -62,7 +62,7 @@ export default function BlogPostPage() {
           </span>
           <span className="flex items-center gap-1">
             <Clock className="h-4 w-4" />
-            {post.read_time} read
+            {Math.ceil(post.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length / 200)} min read
           </span>
         </div>
 
