@@ -25,7 +25,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
           </span>
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
-            {post.read_time}
+            {Math.ceil(post.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length / 200)} min
           </span>
         </div>
       </div>
