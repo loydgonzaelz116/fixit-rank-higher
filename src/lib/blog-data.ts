@@ -16,7 +16,7 @@ export interface BlogPost {
 export async function getPosts(): Promise<BlogPost[]> {
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, excerpt, content, category, featured_image, meta_description, author, read_time, created_at")
+    .select("id, title, slug, excerpt, content, category, featured_image, meta_description, author, created_at")
     .order("created_at", { ascending: false });
 
   if (error) {
