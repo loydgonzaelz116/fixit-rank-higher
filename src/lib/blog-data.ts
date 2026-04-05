@@ -10,7 +10,6 @@ export interface BlogPost {
   featured_image: string;
   meta_description: string;
   author: string;
-  read_time: string;
   created_at: string;
 }
 
