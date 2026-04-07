@@ -7,10 +7,14 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   category: string;
+  city: string | null;
+  status: string;
   featured_image: string;
+  meta_title: string | null;
   meta_description: string;
   author: string;
   created_at: string;
+  updated_at: string;
 }
 
 export async function getPosts(): Promise<BlogPost[]> {
