@@ -1,4 +1,17 @@
+import { createClient } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+const blogSupabase = createClient<Database>(
+  "https://pcvotucxbrqbbcjgzsht.supabase.co",
+  "sb_publishable_F7dfp71sttdBRQXrnlEjHg_FG_rUP7p",
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  }
+);
 
 export interface BlogPost {
   id: string;
@@ -18,7 +31,7 @@ export interface BlogPost {
 }
 
 export async function getPosts(): Promise<BlogPost[]> {
-  const { data, error } = await supabase
+  const { data, error } = await blogSupabase
     .from("blog_posts")
     .select("id, title, slug, excerpt, content, category, city, status, featured_image, meta_title, meta_description, author, created_at, updated_at")
     .eq("status", "published")
@@ -32,7 +45,7 @@ export async function getPosts(): Promise<BlogPost[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
-  const { data, error } = await supabase
+  const { data, error } = await blogSupabase
     .from("blog_posts")
     .select("id, title, slug, excerpt, content, category, city, status, featured_image, meta_title, meta_description, author, created_at, updated_at")
     .eq("slug", slug)
