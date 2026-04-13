@@ -14,7 +14,7 @@ export default function PermitCalculator() {
         </h1>
         <div className="w-full max-w-4xl mx-auto rounded-lg overflow-hidden border border-border">
           <iframe
-            src="https://asset-manager-loydgonzalez111.replit.app/calculator?trade=plumbing"
+            src="https://asset-manager-loydgonzalez111.replit.app/"
             width="100%"
             height="600"
             style={{ border: "none" }}
