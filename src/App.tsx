@@ -35,6 +35,7 @@ const App = () => (
             <Route path="/admin/new-post" element={<AdminNewPost />} />
             <Route path="/admin/blog-editor" element={<AdminBlogEditor />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
+            <Route path="/permit-calculator" element={<PermitCalculator />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
