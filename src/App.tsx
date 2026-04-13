@@ -14,6 +14,8 @@ import AdminNewPost from "@/pages/AdminNewPost";
 import AdminBlogEditor from "@/pages/AdminBlogEditor";
 import ComingSoon from "@/pages/ComingSoon";
 import PermitCalculator from "@/pages/PermitCalculator";
+import Calculators from "@/pages/Calculators";
+import CalculatorEmbed from "@/pages/CalculatorEmbed";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +38,8 @@ const App = () => (
             <Route path="/admin/blog-editor" element={<AdminBlogEditor />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/permit-calculator" element={<PermitCalculator />} />
+            <Route path="/calculators" element={<Calculators />} />
+            <Route path="/calculator/:trade" element={<CalculatorEmbed />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
