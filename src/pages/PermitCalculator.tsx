@@ -4,7 +4,7 @@ export default function PermitCalculator() {
   return (
     <>
       <SEOHead
-        title="Spokane Permit Calculator"
+        title="Permit Calculator"
         description="Estimate permit costs for your construction project in Spokane."
         path="/permit-calculator"
       />
