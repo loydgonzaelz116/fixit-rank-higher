@@ -1,1 +1,10 @@
 project_id = "xcevckeqhcanbyhqatcq"
+
+[functions.sitemap]
+verify_jwt = false
+
+[functions.admin-create-post]
+verify_jwt = false
+
+[functions.subscribe-beehiiv]
+verify_jwt = false
