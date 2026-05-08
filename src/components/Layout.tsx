@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
+import CookieConsent from "./CookieConsent";
 
 export default function Layout() {
   return (
@@ -10,6 +11,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <SiteFooter />
+      <CookieConsent />
     </div>
   );
 }
