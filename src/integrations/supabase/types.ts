@@ -152,6 +152,145 @@ export type Database = {
         }
         Relationships: []
       }
+      generated_posts: {
+        Row: {
+          body_html: string
+          category: string
+          city: string
+          created_at: string
+          excerpt: string
+          hero_alt: string | null
+          hero_image_url: string | null
+          hero_prompt_id: string | null
+          id: string
+          meta_description: string
+          meta_title: string
+          process_alt: string | null
+          process_image_url: string | null
+          process_prompt_id: string | null
+          published_post_id: string | null
+          slug: string
+          status: string
+          title: string
+          trade: string
+          trust_alt: string | null
+          trust_image_url: string | null
+          trust_prompt_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          body_html?: string
+          category?: string
+          city: string
+          created_at?: string
+          excerpt?: string
+          hero_alt?: string | null
+          hero_image_url?: string | null
+          hero_prompt_id?: string | null
+          id?: string
+          meta_description?: string
+          meta_title?: string
+          process_alt?: string | null
+          process_image_url?: string | null
+          process_prompt_id?: string | null
+          published_post_id?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          trade: string
+          trust_alt?: string | null
+          trust_image_url?: string | null
+          trust_prompt_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          category?: string
+          city?: string
+          created_at?: string
+          excerpt?: string
+          hero_alt?: string | null
+          hero_image_url?: string | null
+          hero_prompt_id?: string | null
+          id?: string
+          meta_description?: string
+          meta_title?: string
+          process_alt?: string | null
+          process_image_url?: string | null
+          process_prompt_id?: string | null
+          published_post_id?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          trade?: string
+          trust_alt?: string | null
+          trust_image_url?: string | null
+          trust_prompt_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generated_posts_hero_prompt_id_fkey"
+            columns: ["hero_prompt_id"]
+            isOneToOne: false
+            referencedRelation: "image_prompts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "generated_posts_process_prompt_id_fkey"
+            columns: ["process_prompt_id"]
+            isOneToOne: false
+            referencedRelation: "image_prompts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "generated_posts_trust_prompt_id_fkey"
+            columns: ["trust_prompt_id"]
+            isOneToOne: false
+            referencedRelation: "image_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      image_prompts: {
+        Row: {
+          alt_text_template: string
+          aspect_ratio: string
+          category: Database["public"]["Enums"]["image_prompt_category"]
+          created_at: string
+          id: string
+          is_active: boolean
+          notes: string | null
+          trade: string
+          updated_at: string
+          visual_description: string
+        }
+        Insert: {
+          alt_text_template: string
+          aspect_ratio?: string
+          category: Database["public"]["Enums"]["image_prompt_category"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          trade: string
+          updated_at?: string
+          visual_description: string
+        }
+        Update: {
+          alt_text_template?: string
+          aspect_ratio?: string
+          category?: Database["public"]["Enums"]["image_prompt_category"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          trade?: string
+          updated_at?: string
+          visual_description?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -160,7 +299,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      image_prompt_category: "hero" | "process" | "trust"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -287,6 +426,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      image_prompt_category: ["hero", "process", "trust"],
+    },
   },
 } as const
