@@ -12,6 +12,8 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import AdminNewPost from "@/pages/AdminNewPost";
 import AdminBlogEditor from "@/pages/AdminBlogEditor";
+import AdminContentMachine from "@/pages/AdminContentMachine";
+import AdminPrompts from "@/pages/AdminPrompts";
 import ComingSoon from "@/pages/ComingSoon";
 import PermitCalculator from "@/pages/PermitCalculator";
 import Calculators from "@/pages/Calculators";
@@ -36,6 +38,8 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin/new-post" element={<AdminNewPost />} />
             <Route path="/admin/blog-editor" element={<AdminBlogEditor />} />
+            <Route path="/admin/content-machine" element={<AdminContentMachine />} />
+            <Route path="/admin/prompts" element={<AdminPrompts />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/permit-calculator" element={<PermitCalculator />} />
             <Route path="/calculators" element={<Calculators />} />
