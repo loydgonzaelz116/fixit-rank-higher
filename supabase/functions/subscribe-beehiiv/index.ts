@@ -3,6 +3,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// RFC 5322 simplified email regex
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -11,9 +14,19 @@ Deno.serve(async (req) => {
   try {
     const { email } = await req.json();
 
-    if (!email) {
-      return new Response(JSON.stringify({ error: "email is required" }), {
+    if (typeof email !== "string" || email.length < 3 || email.length > 255 || !EMAIL_RE.test(email)) {
+      return new Response(JSON.stringify({ error: "Invalid email" }), {
         status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Require Supabase anon JWT (apikey header) so random scripts cannot hit this directly
+    const apikey = req.headers.get("apikey") || req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+    const expectedAnon = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
+    if (!apikey || (expectedAnon && apikey !== expectedAnon)) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

@@ -9,14 +9,24 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function AdminBlogEditor() {
   const { toast } = useToast();
+  const [token, setToken] = useState(() => sessionStorage.getItem("admin_token") || "");
+  const [authenticated, setAuthenticated] = useState(() => !!sessionStorage.getItem("admin_token"));
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [form, setForm] = useState({ title: "", slug: "", excerpt: "", category: "", content: "", featured_image: "", meta_description: "" });
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    getPosts().then(setPosts);
-  }, []);
+    if (authenticated) getPosts().then(setPosts);
+  }, [authenticated]);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (token.trim()) {
+      sessionStorage.setItem("admin_token", token.trim());
+      setAuthenticated(true);
+    }
+  };
 
   const handleSelect = (id: string) => {
     const post = posts.find((p) => p.id === id);
@@ -60,6 +70,22 @@ export default function AdminBlogEditor() {
     }
     setSaving(false);
   };
+
+  if (!authenticated) {
+    return (
+      <>
+        <SEOHead title="Admin Login" description="Admin authentication" path="/admin/blog-editor" />
+        <section className="container py-20 max-w-md mx-auto text-center">
+          <h1 className="text-2xl font-extrabold mb-2">Admin Access</h1>
+          <p className="text-sm text-muted-foreground mb-6">Enter your bearer token to continue.</p>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <Input type="password" placeholder="Bearer token" value={token} onChange={(e) => setToken(e.target.value)} required />
+            <Button type="submit" variant="cta" className="w-full">Authenticate</Button>
+          </form>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>
