@@ -348,6 +348,60 @@ export type Database = {
         }
         Relationships: []
       }
+      programmatic_calculator_leads: {
+        Row: {
+          area_sqft: number | null
+          board_feet: number | null
+          created_at: string
+          email: string
+          estimate_high: number | null
+          estimate_low: number | null
+          full_name: string
+          id: string
+          industry: string
+          modifier: number | null
+          phone: string
+          project_type: string | null
+          region_tier: string | null
+          thickness_inches: number | null
+          zip_code: string
+        }
+        Insert: {
+          area_sqft?: number | null
+          board_feet?: number | null
+          created_at?: string
+          email: string
+          estimate_high?: number | null
+          estimate_low?: number | null
+          full_name: string
+          id?: string
+          industry: string
+          modifier?: number | null
+          phone: string
+          project_type?: string | null
+          region_tier?: string | null
+          thickness_inches?: number | null
+          zip_code: string
+        }
+        Update: {
+          area_sqft?: number | null
+          board_feet?: number | null
+          created_at?: string
+          email?: string
+          estimate_high?: number | null
+          estimate_low?: number | null
+          full_name?: string
+          id?: string
+          industry?: string
+          modifier?: number | null
+          phone?: string
+          project_type?: string | null
+          region_tier?: string | null
+          thickness_inches?: number | null
+          zip_code?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
