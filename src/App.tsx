@@ -18,6 +18,7 @@ import ComingSoon from "@/pages/ComingSoon";
 import PermitCalculator from "@/pages/PermitCalculator";
 import Calculators from "@/pages/Calculators";
 import CalculatorEmbed from "@/pages/CalculatorEmbed";
+import SprayFoamCalculator from "@/pages/SprayFoamCalculator";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/permit-calculator" element={<PermitCalculator />} />
             <Route path="/calculators" element={<Calculators />} />
             <Route path="/calculator/:trade" element={<CalculatorEmbed />} />
+            <Route path="/spray-foam-insulation-cost-calculator" element={<SprayFoamCalculator />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
