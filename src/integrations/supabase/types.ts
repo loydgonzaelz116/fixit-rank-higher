@@ -291,6 +291,63 @@ export type Database = {
         }
         Relationships: []
       }
+      industry_calculator_leads: {
+        Row: {
+          base_high: number
+          base_low: number
+          created_at: string
+          email: string | null
+          estimate_high: number
+          estimate_low: number
+          id: string
+          modifier: number
+          name: string | null
+          notes: string | null
+          phone: string | null
+          region_tier: string
+          selections: Json
+          trade: string
+          updated_at: string
+          zip_code: string
+        }
+        Insert: {
+          base_high: number
+          base_low: number
+          created_at?: string
+          email?: string | null
+          estimate_high: number
+          estimate_low: number
+          id?: string
+          modifier: number
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          region_tier: string
+          selections?: Json
+          trade: string
+          updated_at?: string
+          zip_code: string
+        }
+        Update: {
+          base_high?: number
+          base_low?: number
+          created_at?: string
+          email?: string | null
+          estimate_high?: number
+          estimate_low?: number
+          id?: string
+          modifier?: number
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          region_tier?: string
+          selections?: Json
+          trade?: string
+          updated_at?: string
+          zip_code?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
