@@ -1,4 +1,6 @@
 import { useParams, Link } from "react-router-dom";
+import { useMemo } from "react";
+import DOMPurify from "dompurify";
 import { getPostBySlug, type BlogPost } from "@/lib/blog-data";
 import SEOHead from "@/components/SEOHead";
 import EmailCapture from "@/components/EmailCapture";
@@ -81,10 +83,7 @@ export default function BlogPostPage() {
           </nav>
         )}
 
-        <div
-          className="mt-8 prose prose-slate max-w-none prose-headings:text-primary prose-a:text-accent"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <SanitizedContent html={post.content} />
 
         <div className="mt-8 rounded-lg bg-secondary p-5 border border-border">
           <p className="text-sm text-primary">
@@ -120,3 +119,21 @@ export default function BlogPostPage() {
     </>
   );
 }
+
+function SanitizedContent({ html }: { html: string }) {
+  const clean = useMemo(
+    () =>
+      DOMPurify.sanitize(html, {
+        USE_PROFILES: { html: true },
+        ADD_ATTR: ["target", "rel", "loading"],
+      }),
+    [html]
+  );
+  return (
+    <div
+      className="mt-8 prose prose-slate max-w-none prose-headings:text-primary prose-a:text-accent"
+      dangerouslySetInnerHTML={{ __html: clean }}
+    />
+  );
+}
+

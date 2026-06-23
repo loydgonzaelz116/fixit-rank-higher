@@ -34,15 +34,31 @@ Deno.serve(async (req) => {
   const meta_description = o.meta_description ?? draft.meta_description;
   const hero_image_url = o.hero_image_url ?? draft.hero_image_url ?? "";
 
+  // HTML-escape values destined for attributes / text to prevent stored XSS
+  const esc = (s: string) =>
+    String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  // Only allow http(s) image URLs
+  const safeUrl = (u: string) => (/^https?:\/\//i.test(u) ? esc(u) : "");
+
+  const heroSrc = safeUrl(hero_image_url);
+  const processSrc = safeUrl(draft.process_image_url ?? "");
+  const trustSrc = safeUrl(draft.trust_image_url ?? "");
+
   // Build full content with hero image embedded + a process & trust image inline
-  const heroBlock = hero_image_url
-    ? `<img src="${hero_image_url}" alt="${draft.hero_alt ?? title}" loading="eager" style="width:100%;border-radius:8px;margin-bottom:1.5rem;" />`
+  const heroBlock = heroSrc
+    ? `<img src="${heroSrc}" alt="${esc(draft.hero_alt ?? title)}" loading="eager" style="width:100%;border-radius:8px;margin-bottom:1.5rem;" />`
     : "";
-  const processBlock = draft.process_image_url
-    ? `<figure style="margin:2rem 0;"><img src="${draft.process_image_url}" alt="${draft.process_alt ?? ""}" loading="lazy" style="width:100%;border-radius:8px;" /><figcaption style="font-size:0.85rem;color:#64748b;margin-top:0.5rem;">${draft.process_alt ?? ""}</figcaption></figure>`
+  const processBlock = processSrc
+    ? `<figure style="margin:2rem 0;"><img src="${processSrc}" alt="${esc(draft.process_alt ?? "")}" loading="lazy" style="width:100%;border-radius:8px;" /><figcaption style="font-size:0.85rem;color:#64748b;margin-top:0.5rem;">${esc(draft.process_alt ?? "")}</figcaption></figure>`
     : "";
-  const trustBlock = draft.trust_image_url
-    ? `<figure style="margin:2rem 0;"><img src="${draft.trust_image_url}" alt="${draft.trust_alt ?? ""}" loading="lazy" style="width:100%;border-radius:8px;" /><figcaption style="font-size:0.85rem;color:#64748b;margin-top:0.5rem;">${draft.trust_alt ?? ""}</figcaption></figure>`
+  const trustBlock = trustSrc
+    ? `<figure style="margin:2rem 0;"><img src="${trustSrc}" alt="${esc(draft.trust_alt ?? "")}" loading="lazy" style="width:100%;border-radius:8px;" /><figcaption style="font-size:0.85rem;color:#64748b;margin-top:0.5rem;">${esc(draft.trust_alt ?? "")}</figcaption></figure>`
     : "";
 
   // Insert process image after first </h2> block, trust before last </h2> block
