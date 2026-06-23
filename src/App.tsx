@@ -45,6 +45,7 @@ const App = () => (
             <Route path="/permit-calculator" element={<PermitCalculator />} />
             <Route path="/calculators" element={<Calculators />} />
             <Route path="/calculator/:trade" element={<CalculatorEmbed />} />
+            <Route path="/spray-foam-insulation-cost-calculator" element={<SprayFoamCalculator />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
