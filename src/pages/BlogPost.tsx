@@ -119,3 +119,21 @@ export default function BlogPostPage() {
     </>
   );
 }
+
+function SanitizedContent({ html }: { html: string }) {
+  const clean = useMemo(
+    () =>
+      DOMPurify.sanitize(html, {
+        USE_PROFILES: { html: true },
+        ADD_ATTR: ["target", "rel", "loading"],
+      }),
+    [html]
+  );
+  return (
+    <div
+      className="mt-8 prose prose-slate max-w-none prose-headings:text-primary prose-a:text-accent"
+      dangerouslySetInnerHTML={{ __html: clean }}
+    />
+  );
+}
+
