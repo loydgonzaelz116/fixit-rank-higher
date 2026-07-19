@@ -7,6 +7,31 @@ import NotFound from "./NotFound";
 const fmt = (n: number) => `$${n.toLocaleString()}`;
 const SITE_URL = "https://fixitnearme.com";
 const JSONLD_ID = "svc-location-jsonld";
+const FAQ_JSONLD_ID = "svc-location-faq-jsonld";
+
+function buildFaqs(r: NonNullable<ReturnType<typeof calculateCost>>, year: number, range: string) {
+  const svc = r.serviceName;
+  const svcL = svc.toLowerCase();
+  const loc = `${r.countyName} County, ${r.stateName}`;
+  return [
+    {
+      q: `How much does ${svcL} cost in ${loc}?`,
+      a: `In ${year}, ${svcL} in ${loc} typically runs ${range} ${r.unit}. Pricing reflects a ${r.multiplier}× regional labor and materials index applied to national baselines.`,
+    },
+    {
+      q: `What drives ${svcL} pricing in ${r.stateName}?`,
+      a: `Local labor rates, permit fees, material availability, and project scope are the main cost drivers. ${r.countyName} County uses a ${r.multiplier}× multiplier versus the national baseline.`,
+    },
+    {
+      q: `Are these ${svcL} estimates guaranteed?`,
+      a: `No. These are data-driven ranges for planning. Final quotes depend on site conditions, access, finishes, and contractor availability. Always collect 2–3 local bids before committing.`,
+    },
+    {
+      q: `How can I get a firm quote for ${svcL} in ${r.countyName} County?`,
+      a: `Contact a licensed local contractor for an on-site assessment. Share project scope, square footage or unit count, and timing to receive an accurate written estimate.`,
+    },
+  ];
+}
 
 export default function ServiceLocationPage() {
   const { service = "", state = "", county = "" } = useParams();
