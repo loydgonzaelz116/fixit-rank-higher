@@ -280,6 +280,9 @@ export default function AdminFaqs() {
       </div>
     </>
   );
+}
+
+
 
 function PreviewSection({
   serviceSlug,
