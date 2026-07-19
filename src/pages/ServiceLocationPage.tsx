@@ -33,6 +33,27 @@ export default function ServiceLocationPage() {
       )}.png?theme=dark&md=1&fontSize=75px`
     : undefined;
 
+  const [faqs, setFaqs] = useState<Faq[]>([]);
+
+  useEffect(() => {
+    if (!result) return;
+    let cancelled = false;
+    const defaults = buildDefaultFaqs(result, year, range);
+    setFaqs(defaults);
+    fetchFaqOverride(result).then((override) => {
+      if (cancelled || !override) return;
+      setFaqs(
+        override.map((f) => ({
+          q: interpolate(f.q, result, year, range),
+          a: interpolate(f.a, result, year, range),
+        })),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [result, year, range]);
+
   useEffect(() => {
     if (!result) return;
     const jsonld = {
@@ -59,7 +80,6 @@ export default function ServiceLocationPage() {
       },
       url: `${SITE_URL}${path}`,
     };
-    const faqs = buildFaqs(result, year, range);
     const faqJsonld = {
       "@context": "https://schema.org",
       "@type": "FAQPage",
@@ -85,12 +105,11 @@ export default function ServiceLocationPage() {
       document.getElementById(JSONLD_ID)?.remove();
       document.getElementById(FAQ_JSONLD_ID)?.remove();
     };
-  }, [result, path, year, range]);
+  }, [result, path, faqs]);
 
   if (!result) return <NotFound />;
 
   const h1 = `${result.serviceName} Costs in ${result.countyName} County, ${result.stateName}`;
-  const faqs = buildFaqs(result, year, range);
 
   return (
     <>
