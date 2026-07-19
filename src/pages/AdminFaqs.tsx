@@ -247,6 +247,8 @@ export default function AdminFaqs() {
             </div>
           </section>
 
+          <PreviewSection serviceSlug={serviceSlug} stateSlug={stateSlug} countySlug={countySlug} faqs={faqs} />
+
           <section>
             <h2 className="text-xl font-semibold mb-4">Existing overrides {loading && "…"}</h2>
             <div className="space-y-2">
