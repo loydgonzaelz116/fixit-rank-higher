@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.cost-estimate]
 verify_jwt = false
+
+[functions.admin-faqs]
+verify_jwt = false
