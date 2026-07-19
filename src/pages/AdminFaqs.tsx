@@ -280,4 +280,103 @@ export default function AdminFaqs() {
       </div>
     </>
   );
+
+function PreviewSection({
+  serviceSlug,
+  stateSlug,
+  countySlug,
+  faqs,
+}: {
+  serviceSlug: string;
+  stateSlug: string;
+  countySlug: string;
+  faqs: { q: string; a: string }[];
+}) {
+  const fmt = (n: number) => `$${n.toLocaleString()}`;
+  const year = new Date().getFullYear();
+
+  const { result, sampleNote } = useMemo(() => {
+    const state = stateSlug ? LOCATION_MULTIPLIERS[stateSlug] : null;
+    let effectiveState = stateSlug;
+    let effectiveCounty = countySlug;
+    let note = "";
+
+    if (!effectiveState) {
+      effectiveState = "california";
+      note = "Previewing with sample state (California) — save applies to all states.";
+    }
+    if (!effectiveCounty) {
+      const counties = LOCATION_MULTIPLIERS[effectiveState]?.counties ?? {};
+      effectiveCounty = Object.keys(counties)[0] ?? "sample";
+      if (!note) note = `Previewing with sample county (${effectiveCounty}) — save applies to all counties in ${effectiveState}.`;
+    }
+    return {
+      result: calculateCost(serviceSlug, effectiveState, effectiveCounty),
+      sampleNote: note,
+    };
+  }, [serviceSlug, stateSlug, countySlug]);
+
+  if (!result) return null;
+
+  const range = `${fmt(result.low)}–${fmt(result.high)}`;
+  const cleaned = faqs.filter((f) => f.q.trim() && f.a.trim());
+  const source = cleaned.length ? cleaned : buildDefaultFaqs(result, year, range);
+  const rendered = source.map((f) => ({
+    q: interpolate(f.q, result, year, range),
+    a: interpolate(f.a, result, year, range),
+  }));
+
+  const jsonld = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: rendered.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  return (
+    <section className="space-y-4">
+      <div className="flex items-end justify-between">
+        <div>
+          <h2 className="text-xl font-semibold">Live preview</h2>
+          <p className="text-slate-500 text-xs mt-1">
+            {result.serviceName} · {result.countyName} County, {result.stateName} · {range} {result.unit}
+          </p>
+        </div>
+        {!cleaned.length && (
+          <span className="text-xs text-slate-500">Showing auto-generated defaults</span>
+        )}
+      </div>
+      {sampleNote && (
+        <p className="text-xs text-slate-500 italic">{sampleNote}</p>
+      )}
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
+          <p className="text-xs uppercase tracking-widest text-slate-500 mb-4">Accordion</p>
+          <div className="space-y-3">
+            {rendered.map((f, i) => (
+              <details key={i} className="group rounded-lg border border-slate-800 bg-slate-950/60 p-4 open:bg-slate-900/60">
+                <summary className="cursor-pointer list-none flex justify-between items-start gap-4 text-slate-100 font-medium text-sm">
+                  <span>{f.q}</span>
+                  <span className="text-slate-500 text-lg leading-none group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-2 text-xs text-slate-400 leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
+          <p className="text-xs uppercase tracking-widest text-slate-500 mb-4">FAQPage JSON-LD</p>
+          <pre className="text-[11px] leading-relaxed text-slate-300 overflow-auto max-h-[420px] whitespace-pre-wrap break-words">
+{JSON.stringify(jsonld, null, 2)}
+          </pre>
+        </div>
+      </div>
+    </section>
+  );
 }
+
