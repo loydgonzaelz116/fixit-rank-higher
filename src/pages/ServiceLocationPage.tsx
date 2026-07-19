@@ -153,6 +153,26 @@ export default function ServiceLocationPage() {
             Call Local Contractor
           </a>
 
+          <div className="mt-20 border-t border-slate-800 pt-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-8 tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-4">
+              {faqs.map((f, i) => (
+                <details
+                  key={i}
+                  className="group rounded-lg border border-slate-800 bg-slate-900/40 p-5 open:bg-slate-900/60 transition"
+                >
+                  <summary className="cursor-pointer list-none flex justify-between items-start gap-4 text-slate-100 font-medium">
+                    <span>{f.q}</span>
+                    <span className="text-slate-500 text-xl leading-none group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="mt-3 text-sm text-slate-400 leading-relaxed">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+
           <div className="mt-16 border-t border-slate-800 pt-8 text-sm text-slate-500 leading-relaxed">
             <p>
               Estimates combine national {result.serviceName.toLowerCase()} averages with a regional multiplier reflecting local labor rates, permit costs, and material availability. Final quotes vary by project scope and site conditions.
