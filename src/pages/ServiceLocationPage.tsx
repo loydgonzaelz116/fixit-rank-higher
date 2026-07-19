@@ -7,6 +7,31 @@ import NotFound from "./NotFound";
 const fmt = (n: number) => `$${n.toLocaleString()}`;
 const SITE_URL = "https://fixitnearme.com";
 const JSONLD_ID = "svc-location-jsonld";
+const FAQ_JSONLD_ID = "svc-location-faq-jsonld";
+
+function buildFaqs(r: NonNullable<ReturnType<typeof calculateCost>>, year: number, range: string) {
+  const svc = r.serviceName;
+  const svcL = svc.toLowerCase();
+  const loc = `${r.countyName} County, ${r.stateName}`;
+  return [
+    {
+      q: `How much does ${svcL} cost in ${loc}?`,
+      a: `In ${year}, ${svcL} in ${loc} typically runs ${range} ${r.unit}. Pricing reflects a ${r.multiplier}× regional labor and materials index applied to national baselines.`,
+    },
+    {
+      q: `What drives ${svcL} pricing in ${r.stateName}?`,
+      a: `Local labor rates, permit fees, material availability, and project scope are the main cost drivers. ${r.countyName} County uses a ${r.multiplier}× multiplier versus the national baseline.`,
+    },
+    {
+      q: `Are these ${svcL} estimates guaranteed?`,
+      a: `No. These are data-driven ranges for planning. Final quotes depend on site conditions, access, finishes, and contractor availability. Always collect 2–3 local bids before committing.`,
+    },
+    {
+      q: `How can I get a firm quote for ${svcL} in ${r.countyName} County?`,
+      a: `Contact a licensed local contractor for an on-site assessment. Share project scope, square footage or unit count, and timing to receive an accurate written estimate.`,
+    },
+  ];
+}
 
 export default function ServiceLocationPage() {
   const { service = "", state = "", county = "" } = useParams();
@@ -57,22 +82,38 @@ export default function ServiceLocationPage() {
       },
       url: `${SITE_URL}${path}`,
     };
-    let el = document.getElementById(JSONLD_ID) as HTMLScriptElement | null;
-    if (!el) {
-      el = document.createElement("script");
-      el.type = "application/ld+json";
-      el.id = JSONLD_ID;
-      document.head.appendChild(el);
-    }
-    el.textContent = JSON.stringify(jsonld);
+    const faqs = buildFaqs(result, year, range);
+    const faqJsonld = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    };
+    const upsert = (id: string, data: unknown) => {
+      let el = document.getElementById(id) as HTMLScriptElement | null;
+      if (!el) {
+        el = document.createElement("script");
+        el.type = "application/ld+json";
+        el.id = id;
+        document.head.appendChild(el);
+      }
+      el.textContent = JSON.stringify(data);
+    };
+    upsert(JSONLD_ID, jsonld);
+    upsert(FAQ_JSONLD_ID, faqJsonld);
     return () => {
       document.getElementById(JSONLD_ID)?.remove();
+      document.getElementById(FAQ_JSONLD_ID)?.remove();
     };
-  }, [result, path]);
+  }, [result, path, year, range]);
 
   if (!result) return <NotFound />;
 
   const h1 = `${result.serviceName} Costs in ${result.countyName} County, ${result.stateName}`;
+  const faqs = buildFaqs(result, year, range);
 
   return (
     <>
@@ -111,6 +152,26 @@ export default function ServiceLocationPage() {
           >
             Call Local Contractor
           </a>
+
+          <div className="mt-20 border-t border-slate-800 pt-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-8 tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-4">
+              {faqs.map((f, i) => (
+                <details
+                  key={i}
+                  className="group rounded-lg border border-slate-800 bg-slate-900/40 p-5 open:bg-slate-900/60 transition"
+                >
+                  <summary className="cursor-pointer list-none flex justify-between items-start gap-4 text-slate-100 font-medium">
+                    <span>{f.q}</span>
+                    <span className="text-slate-500 text-xl leading-none group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="mt-3 text-sm text-slate-400 leading-relaxed">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
 
           <div className="mt-16 border-t border-slate-800 pt-8 text-sm text-slate-500 leading-relaxed">
             <p>
