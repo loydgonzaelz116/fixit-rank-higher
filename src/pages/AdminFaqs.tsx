@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import SEOHead from "@/components/SEOHead";
-import { BASELINE_COSTS, LOCATION_MULTIPLIERS } from "@/lib/cost-directory";
+import { BASELINE_COSTS, LOCATION_MULTIPLIERS, calculateCost } from "@/lib/cost-directory";
+import { buildDefaultFaqs, interpolate } from "@/lib/faqs";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-faqs`;
 
