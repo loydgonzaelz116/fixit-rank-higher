@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { calculateCost } from "@/lib/cost-directory";
+import { buildDefaultFaqs, fetchFaqOverride, interpolate, type Faq } from "@/lib/faqs";
 import NotFound from "./NotFound";
 
 const fmt = (n: number) => `$${n.toLocaleString()}`;
