@@ -1,37 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { calculateCost } from "@/lib/cost-directory";
+import { buildDefaultFaqs, fetchFaqOverride, interpolate, type Faq } from "@/lib/faqs";
 import NotFound from "./NotFound";
 
 const fmt = (n: number) => `$${n.toLocaleString()}`;
 const SITE_URL = "https://fixitnearme.com";
 const JSONLD_ID = "svc-location-jsonld";
 const FAQ_JSONLD_ID = "svc-location-faq-jsonld";
-
-function buildFaqs(r: NonNullable<ReturnType<typeof calculateCost>>, year: number, range: string) {
-  const svc = r.serviceName;
-  const svcL = svc.toLowerCase();
-  const loc = `${r.countyName} County, ${r.stateName}`;
-  return [
-    {
-      q: `How much does ${svcL} cost in ${loc}?`,
-      a: `In ${year}, ${svcL} in ${loc} typically runs ${range} ${r.unit}. Pricing reflects a ${r.multiplier}× regional labor and materials index applied to national baselines.`,
-    },
-    {
-      q: `What drives ${svcL} pricing in ${r.stateName}?`,
-      a: `Local labor rates, permit fees, material availability, and project scope are the main cost drivers. ${r.countyName} County uses a ${r.multiplier}× multiplier versus the national baseline.`,
-    },
-    {
-      q: `Are these ${svcL} estimates guaranteed?`,
-      a: `No. These are data-driven ranges for planning. Final quotes depend on site conditions, access, finishes, and contractor availability. Always collect 2–3 local bids before committing.`,
-    },
-    {
-      q: `How can I get a firm quote for ${svcL} in ${r.countyName} County?`,
-      a: `Contact a licensed local contractor for an on-site assessment. Share project scope, square footage or unit count, and timing to receive an accurate written estimate.`,
-    },
-  ];
-}
 
 export default function ServiceLocationPage() {
   const { service = "", state = "", county = "" } = useParams();
@@ -55,6 +32,27 @@ export default function ServiceLocationPage() {
         `${result.serviceName}%20Cost%20in%20${result.countyName}%20County%2C%20${result.stateName}%20**${range}**`
       )}.png?theme=dark&md=1&fontSize=75px`
     : undefined;
+
+  const [faqs, setFaqs] = useState<Faq[]>([]);
+
+  useEffect(() => {
+    if (!result) return;
+    let cancelled = false;
+    const defaults = buildDefaultFaqs(result, year, range);
+    setFaqs(defaults);
+    fetchFaqOverride(result).then((override) => {
+      if (cancelled || !override) return;
+      setFaqs(
+        override.map((f) => ({
+          q: interpolate(f.q, result, year, range),
+          a: interpolate(f.a, result, year, range),
+        })),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [result, year, range]);
 
   useEffect(() => {
     if (!result) return;
@@ -82,7 +80,6 @@ export default function ServiceLocationPage() {
       },
       url: `${SITE_URL}${path}`,
     };
-    const faqs = buildFaqs(result, year, range);
     const faqJsonld = {
       "@context": "https://schema.org",
       "@type": "FAQPage",
@@ -108,12 +105,11 @@ export default function ServiceLocationPage() {
       document.getElementById(JSONLD_ID)?.remove();
       document.getElementById(FAQ_JSONLD_ID)?.remove();
     };
-  }, [result, path, year, range]);
+  }, [result, path, faqs]);
 
   if (!result) return <NotFound />;
 
   const h1 = `${result.serviceName} Costs in ${result.countyName} County, ${result.stateName}`;
-  const faqs = buildFaqs(result, year, range);
 
   return (
     <>

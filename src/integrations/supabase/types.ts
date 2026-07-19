@@ -402,6 +402,36 @@ export type Database = {
         }
         Relationships: []
       }
+      service_location_faqs: {
+        Row: {
+          county_slug: string | null
+          created_at: string
+          faqs: Json
+          id: string
+          service_slug: string
+          state_slug: string | null
+          updated_at: string
+        }
+        Insert: {
+          county_slug?: string | null
+          created_at?: string
+          faqs?: Json
+          id?: string
+          service_slug: string
+          state_slug?: string | null
+          updated_at?: string
+        }
+        Update: {
+          county_slug?: string | null
+          created_at?: string
+          faqs?: Json
+          id?: string
+          service_slug?: string
+          state_slug?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
