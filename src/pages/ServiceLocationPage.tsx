@@ -82,22 +82,38 @@ export default function ServiceLocationPage() {
       },
       url: `${SITE_URL}${path}`,
     };
-    let el = document.getElementById(JSONLD_ID) as HTMLScriptElement | null;
-    if (!el) {
-      el = document.createElement("script");
-      el.type = "application/ld+json";
-      el.id = JSONLD_ID;
-      document.head.appendChild(el);
-    }
-    el.textContent = JSON.stringify(jsonld);
+    const faqs = buildFaqs(result, year, range);
+    const faqJsonld = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    };
+    const upsert = (id: string, data: unknown) => {
+      let el = document.getElementById(id) as HTMLScriptElement | null;
+      if (!el) {
+        el = document.createElement("script");
+        el.type = "application/ld+json";
+        el.id = id;
+        document.head.appendChild(el);
+      }
+      el.textContent = JSON.stringify(data);
+    };
+    upsert(JSONLD_ID, jsonld);
+    upsert(FAQ_JSONLD_ID, faqJsonld);
     return () => {
       document.getElementById(JSONLD_ID)?.remove();
+      document.getElementById(FAQ_JSONLD_ID)?.remove();
     };
-  }, [result, path]);
+  }, [result, path, year, range]);
 
   if (!result) return <NotFound />;
 
   const h1 = `${result.serviceName} Costs in ${result.countyName} County, ${result.stateName}`;
+  const faqs = buildFaqs(result, year, range);
 
   return (
     <>
