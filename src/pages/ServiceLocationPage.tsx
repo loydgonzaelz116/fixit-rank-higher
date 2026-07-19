@@ -84,7 +84,7 @@ export default function ServiceLocationPage() {
             {result.stateName} · {result.countyName} County
           </p>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-100 mb-6">
-            {title}
+            {h1}
           </h1>
           <p className="text-slate-400 text-lg mb-14 max-w-2xl">
             Regional cost estimate for {result.serviceName.toLowerCase()} in {result.countyName} County, based on national baselines adjusted for local labor and material variables.
