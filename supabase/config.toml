@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.content-machine-publish]
 verify_jwt = false
+
+[functions.cost-estimate]
+verify_jwt = false
