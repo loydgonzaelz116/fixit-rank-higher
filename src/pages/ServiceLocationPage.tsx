@@ -1,29 +1,90 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { calculateCost } from "@/lib/cost-directory";
 import NotFound from "./NotFound";
 
 const fmt = (n: number) => `$${n.toLocaleString()}`;
+const SITE_URL = "https://fixitnearme.com";
+const JSONLD_ID = "svc-location-jsonld";
 
 export default function ServiceLocationPage() {
   const { service = "", state = "", county = "" } = useParams();
   const result = calculateCost(service.toLowerCase(), state.toLowerCase(), county.toLowerCase());
 
+  const year = new Date().getFullYear();
+  const path = `/${service}/${state}/${county}`;
+
+  const svcLower = result?.serviceName.toLowerCase() ?? "";
+  const unitLower = result?.unit.toLowerCase() ?? "";
+  const range = result ? `${fmt(result.low)}–${fmt(result.high)}` : "";
+
+  const title = result
+    ? `${result.serviceName} Cost in ${result.countyName} County, ${result.stateName} (${year}): ${range} ${result.unit}`
+    : "";
+  const desc = result
+    ? `${year} ${svcLower} cost in ${result.countyName} County, ${result.stateName}: ${range} ${unitLower}. Regional pricing adjusted with a ${result.multiplier}× local labor index.`
+    : "";
+  const ogImage = result
+    ? `https://og-image.vercel.app/${encodeURIComponent(
+        `${result.serviceName}%20Cost%20in%20${result.countyName}%20County%2C%20${result.stateName}%20**${range}**`
+      )}.png?theme=dark&md=1&fontSize=75px`
+    : undefined;
+
+  useEffect(() => {
+    if (!result) return;
+    const jsonld = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: `${result.serviceName} in ${result.countyName} County, ${result.stateName}`,
+      serviceType: result.serviceName,
+      areaServed: {
+        "@type": "AdministrativeArea",
+        name: `${result.countyName} County, ${result.stateName}`,
+      },
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "USD",
+        lowPrice: result.low,
+        highPrice: result.high,
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          priceCurrency: "USD",
+          minPrice: result.low,
+          maxPrice: result.high,
+          unitText: result.unit,
+        },
+      },
+      url: `${SITE_URL}${path}`,
+    };
+    let el = document.getElementById(JSONLD_ID) as HTMLScriptElement | null;
+    if (!el) {
+      el = document.createElement("script");
+      el.type = "application/ld+json";
+      el.id = JSONLD_ID;
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(jsonld);
+    return () => {
+      document.getElementById(JSONLD_ID)?.remove();
+    };
+  }, [result, path]);
+
   if (!result) return <NotFound />;
 
-  const title = `${result.serviceName} Costs in ${result.countyName} County, ${result.stateName}`;
-  const desc = `Estimated ${result.serviceName.toLowerCase()} cost in ${result.countyName} County, ${result.stateName}: ${fmt(result.low)}–${fmt(result.high)} ${result.unit.toLowerCase()}. Regional pricing adjusted with a ${result.multiplier}× index.`;
+  const h1 = `${result.serviceName} Costs in ${result.countyName} County, ${result.stateName}`;
 
   return (
     <>
-      <SEOHead title={title} description={desc} path={`/${service}/${state}/${county}`} />
+      <SEOHead title={title} description={desc} path={path} ogImage={ogImage} />
+
       <div className="min-h-screen bg-slate-950 text-slate-200">
         <section className="max-w-3xl mx-auto px-6 py-20 md:py-28">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500 mb-6">
             {result.stateName} · {result.countyName} County
           </p>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-100 mb-6">
-            {title}
+            {h1}
           </h1>
           <p className="text-slate-400 text-lg mb-14 max-w-2xl">
             Regional cost estimate for {result.serviceName.toLowerCase()} in {result.countyName} County, based on national baselines adjusted for local labor and material variables.
