@@ -49,17 +49,17 @@ export async function fetchFaqOverride(
   const score = (row: { state_slug: string | null; county_slug: string | null }) =>
     (row.state_slug ? 1 : 0) + (row.county_slug ? 2 : 0);
   const best = [...data].sort((a, b) => score(b) - score(a))[0];
-  const faqs = Array.isArray(best.faqs) ? (best.faqs as Faq[]) : [];
+  const faqs = Array.isArray(best.faqs) ? (best.faqs as unknown as Faq[]) : [];
   return faqs.length ? faqs : null;
 }
 
 export function interpolate(text: string, r: CostResult, year: number, range: string): string {
   return text
-    .replaceAll("{service}", r.serviceName)
-    .replaceAll("{state}", r.stateName)
-    .replaceAll("{county}", r.countyName)
-    .replaceAll("{year}", String(year))
-    .replaceAll("{range}", range)
-    .replaceAll("{unit}", r.unit)
-    .replaceAll("{multiplier}", String(r.multiplier));
+    .replace(/\{service\}/g, r.serviceName)
+    .replace(/\{state\}/g, r.stateName)
+    .replace(/\{county\}/g, r.countyName)
+    .replace(/\{year\}/g, String(year))
+    .replace(/\{range\}/g, range)
+    .replace(/\{unit\}/g, r.unit)
+    .replace(/\{multiplier\}/g, String(r.multiplier));
 }
